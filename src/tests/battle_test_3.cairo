@@ -9,7 +9,7 @@ use src::sorcerer_battle::battle;
 use src::tests::test_utils::{assert_team, assert_defeated};
 
 #[test]
-// #[available_gas(440000)]
+#[available_gas(440000)]
 fn test_battle_1() {
     let mut team1 = ArrayTrait::new();
     team1.append(SorcererTrait::new(4, 3));
@@ -26,15 +26,13 @@ fn test_battle_1() {
     expected.append(SorcererTrait::new(2, 1));
     expected.append(SorcererTrait::new(1, 1));
 
-    //! below is the part of the test that causes its failure!//! below is the part of the test that causes its failure!
-    // assert_team(team1, expected);
+    assert_team(team1, expected);
     
     assert_defeated(team2);
 }
 
-//? THIS TEST ALREADY PASSES SUCCESSFULLY
 #[test]
-// #[available_gas(610000)]
+#[available_gas(610000)]
 fn test_battle_2() {
     let mut team1 = ArrayTrait::new();
     team1.append(SorcererTrait::new(1, 1));
@@ -56,7 +54,7 @@ fn test_battle_2() {
 }
 
 #[test]
-// #[available_gas(310000)]
+#[available_gas(310000)]
 fn test_battle_3() {
     let mut team1 = ArrayTrait::new();
     team1.append(SorcererTrait::new(1, 7));
@@ -71,14 +69,13 @@ fn test_battle_3() {
     let mut expected = ArrayTrait::new();
     expected.append(SorcererTrait::new(1, 1));
 
-    //! below is the part of the test that causes its failure!
-    // assert_team(team1, expected);
+    assert_team(team1, expected);
 
     assert_defeated(team2);
 }
 
 #[test]
-// #[available_gas(1300000)]
+#[available_gas(1300000)]
 fn test_battle_4() {
     let mut team1 = ArrayTrait::new();
     team1.append(SorcererTrait::with_talent(1, 8, Talent::Swift(())));
@@ -102,8 +99,7 @@ fn test_battle_4() {
     expected.append(SorcererTrait::new(2, 3));
     expected.append(SorcererTrait::new(2, 6));
 
-    //! below is the part of the test that causes its failure!
-    // assert_team(team1, expected);
+    assert_team(team1, expected);
     
     assert_defeated(team2);
 }

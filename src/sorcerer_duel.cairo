@@ -1,60 +1,60 @@
 use src::sorcerer::Sorcerer;
 use src::sorcerer::Talent;
-use src::sorcerer::SorcererTrait;
 
-
-fn carry_attack(ref attacker: Sorcerer, ref attackee: Sorcerer) {
-    if attackee.health() > attacker.attack() {
-        attackee.health -= attacker.attack();
-    } else {
-        attackee.health = 0;
-    }
-}
 
 fn duel(ref sorcerer1: Sorcerer, ref sorcerer2: Sorcerer) {
-    // IMPLEMENT THIS FUNCTION
-    while !(sorcerer1.is_defeated()) && !(sorcerer2.is_defeated()) {
-        match sorcerer2.talent {
-            Talent::Talentless(()) | Talent::Venomous(()) => {
-                carry_attack(ref sorcerer1, ref sorcerer2); // atttacket is sorcerer1
-            },
-            Talent::Swift(()) => {
-                if sorcerer1.attack() < 4 {
-                    sorcerer2.health -= 1;
-                } else {
-                    carry_attack(ref sorcerer1, ref sorcerer2); // atttacket is sorcerer1
-                }
-            },
-            Talent::Guardian(()) => {
-                sorcerer2.talent = Talent::Talentless(());
-            }
-        }
+    while sorcerer1.health > 0 && sorcerer2.health > 0 {
+        apply_talent_and_cast_spell(ref sorcerer1, ref sorcerer2);
+        apply_talent_and_cast_spell(ref sorcerer2, ref sorcerer1);
 
-        // attacked: sorcerer1
-        match sorcerer1.talent {
-            Talent::Talentless(()) | Talent::Venomous(()) => {
-                carry_attack(ref sorcerer2, ref sorcerer1); // atttacket is sorcerer2
-            },
-            Talent::Swift(()) => {
-                if sorcerer2.attack() < 4 {
-                    sorcerer1.health -= 1;
-                } else {
-                    carry_attack(ref sorcerer2, ref sorcerer1); // atttacket is sorcerer1
-                }
-            },
-            Talent::Guardian(()) => {
-                sorcerer1.talent = Talent::Talentless(());
-            }
-        }
-
-        match sorcerer1.talent {
-            Talent::Venomous => {sorcerer1.attack += 1},
-            _ => {}
-        }
-
-        match sorcerer2.talent {
-            Talent::Venomous => {sorcerer2.attack += 1},
-            _ => {}
-        }
+        stack_venom_if_applicable(ref sorcerer1, ref sorcerer2);
     }
 }
+
+fn apply_talent_and_cast_spell(ref target: Sorcerer, ref caster: Sorcerer) {
+    match target.talent {
+        Talent::Talentless => { apply_damage(ref target, ref caster); },
+        Talent::Venomous => { apply_damage(ref target, ref caster); },
+        Talent::Swift => {
+            if (caster.attack < 4 && caster.attack != 0) {
+                target.health = target.health - 1;
+            } else {
+                apply_damage(ref target, ref caster);
+            }
+        },
+        Talent::Guardian => {
+            if target.hasBeenDamaged == false {
+                target.hasBeenDamaged = true;
+            } else {
+                apply_damage(ref target, ref caster);
+            }
+        },
+    }
+}
+fn apply_damage(ref sorcerer1: Sorcerer, ref sorcerer2: Sorcerer) {
+    if (sorcerer1.health <= sorcerer2.attack) {
+        sorcerer1.health = 0;
+    } else {
+        sorcerer1.health = sorcerer1.health - sorcerer2.attack;
+    }
+}
+
+
+fn stack_venom_if_applicable(ref sorcerer1: Sorcerer, ref sorcerer2: Sorcerer) {
+    match sorcerer1.talent {
+        Talent::Venomous => { sorcerer1.attack = sorcerer1.attack + 1; },
+        _ => {},
+    // Save space using above expression for useless Talent variants
+    // Talent::Swift => {},
+    // Talent::Guardian => {},
+    // Talent::Talentless => {}
+    }
+
+    match sorcerer2.talent {
+        Talent::Venomous => { sorcerer2.attack = sorcerer2.attack + 1; },
+        Talent::Swift => {},
+        Talent::Guardian => {},
+        Talent::Talentless => {}
+    }
+}
+

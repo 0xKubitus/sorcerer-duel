@@ -6,7 +6,7 @@ mod sorcerer_battle;
 mod tests {
     mod test_utils;
 
-    // mod duel_test_1;
-    // mod talent_test_2;
+    mod duel_test_1;
+    mod talent_test_2;
     mod battle_test_3;
 }
