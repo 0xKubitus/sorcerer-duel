@@ -13,6 +13,11 @@ impl TestSorcererImpl of TestSorcererTrait {
     }
 }
 
+//! You should try and see exactly what happens here,
+//! by printing in your console the values that are being checked:
+    //! -> what is the value of s1.health? what's the value of s2.health?
+    //! -> what is the value of s1.attack? what's the value of s2.attack?
+//! Observing this may give you a hint as to why are those values not matching.
 fn assert_team(mut actual: Array<Sorcerer>, mut expected: Array<Sorcerer>) {
     assert(actual.len() == expected.len(), 'Unexpected team size');
 
